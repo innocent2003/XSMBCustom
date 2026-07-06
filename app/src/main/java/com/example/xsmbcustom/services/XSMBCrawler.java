@@ -1,5 +1,7 @@
 package com.example.xsmbcustom.services;
 
+import android.content.Context;
+
 import com.example.xsmbcustom.model.LotteryResult;
 
 import org.jsoup.Jsoup;
@@ -47,6 +49,11 @@ public class XSMBCrawler {
                             continue;
 
                         String prize = txtGiai.text().trim();
+                        if ("Mã ĐB".equalsIgnoreCase(prize)
+                                || "MãDB".equalsIgnoreCase(prize)
+                                || prize.startsWith("Mã")) {
+                            continue;
+                        }
 
                         List<String> numbers =
                                 new ArrayList<>();
@@ -114,6 +121,90 @@ public class XSMBCrawler {
             default:
                 return 1;
         }
+    }
+    public static void crawlMultiple(
+            Context context,
+            List<String> urls,
+            OnMultiCrawlResultListener listener) {
+
+        new Thread(() -> {
+
+            try {
+
+                ArrayList<ArrayList<LotteryResult>> pages = new ArrayList<>();
+
+                int index = 0;
+
+                for (String url : urls) {
+
+                    Document doc = Jsoup.connect(url)
+                            .userAgent("Mozilla/5.0")
+                            .timeout(10000)
+                            .get();
+
+                    Element table = doc.selectFirst(
+                            "table.kqmb.colgiai.extendable");
+
+                    ArrayList<LotteryResult> list = new ArrayList<>();
+
+                    if (table != null) {
+
+                        Elements rows = table.select("tr");
+
+                        for (Element row : rows) {
+
+                            Element txtGiai = row.selectFirst("td.txt-giai");
+                            Element vGiai = row.selectFirst("td.v-giai");
+
+                            if (txtGiai == null || vGiai == null)
+                                continue;
+
+                            String prize = txtGiai.text().trim();
+                            if ("Mã ĐB".equalsIgnoreCase(prize)
+                                    || "MãDB".equalsIgnoreCase(prize)
+                                    || prize.startsWith("Mã")) {
+                                continue;
+                            }
+
+                            ArrayList<String> numbers = new ArrayList<>();
+
+                            for (Element span : vGiai.select("span")) {
+
+                                String value = span.text().trim();
+
+                                if (!value.isEmpty()) {
+                                    numbers.add(value);
+                                }
+                            }
+
+                            list.add(new LotteryResult(
+                                    prize,
+                                    numbers,
+                                    getColumn(prize)
+                            ));
+                        }
+                    }
+
+                    // Lưu JSON
+                    JsonStorage.save(
+                            context,
+                            "xsmb_" + index + ".json",
+                            list
+                    );
+
+                    pages.add(list);
+                    index++;
+                }
+
+                listener.onSuccess(pages);
+
+            } catch (Exception e) {
+
+                listener.onError(e);
+
+            }
+
+        }).start();
     }
 
 }

@@ -1,7 +1,9 @@
 package com.example.xsmbcustom.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
@@ -13,11 +15,13 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 
+import com.example.xsmbcustom.MainActivity;
 import com.example.xsmbcustom.R;
 import com.example.xsmbcustom.adapter.LotteryAdapter;
 import com.example.xsmbcustom.adapter.XSMBPagerAdapter;
 import com.example.xsmbcustom.model.LotteryResult;
 import com.example.xsmbcustom.services.OnCrawlResultListener;
+import com.example.xsmbcustom.services.OnMultiCrawlResultListener;
 import com.example.xsmbcustom.services.XSMBCrawler;
 
 import java.util.ArrayList;
@@ -28,6 +32,8 @@ public class XSMBActivity  extends AppCompatActivity {
 
 
     private ViewPager2 viewPager;
+    private static final String TAG = "XSMBActivity";
+//    ImageView btnBack = findViewById(R.id.btnBack);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,71 +45,84 @@ public class XSMBActivity  extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+        ImageView btnBack = findViewById(R.id.btnBack);
 
-
-//        viewPager = findViewById(R.id.viewPager);
-//
-//        ArrayList<LotteryResult> day1 = loadDataNgay1();
-//        ArrayList<LotteryResult> day2 = loadDataNgay1();
-//        ArrayList<LotteryResult> day3 = loadDataNgay1();
-//
-//        List<ArrayList<LotteryResult>> pages = new ArrayList<>();
-//
-//        pages.add(day1);
-//        pages.add(day2);
-//        pages.add(day3);
-//
-//        XSMBPagerAdapter pagerAdapter =
-//                new XSMBPagerAdapter(this, pages);
-//
-//        viewPager.setAdapter(pagerAdapter);
-//
-
+        btnBack.setOnClickListener(v -> finish());
 
         viewPager = findViewById(R.id.viewPager);
+//        viewPager.setRotationY(180f);
         TextView txtDate = findViewById(R.id.txtDate);
+        ArrayList<String> urls = new ArrayList<>();
 
-        String url = "https://az24.vn/xsmb-sxmb-xo-so-mien-bac.html";
+//        urls.add("https://az24.vn/xsmb-sxmb-xo-so-mien-bac.html");
+        urls.add("https://az24.vn/xsmb-thu-2.html");
+        urls.add("https://az24.vn/xsmb-thu-3.html");
+        urls.add("https://az24.vn/xsmb-thu-4.html");
+        urls.add("https://az24.vn/xsmb-thu-5.html");
+        urls.add("https://az24.vn/xsmb-thu-6.html");
+        urls.add("https://az24.vn/xsmb-thu-7.html");
+        urls.add("https://az24.vn/xsmb-chu-nhat.html");
 
-        XSMBCrawler.crawl(url, new OnCrawlResultListener() {
+
+        XSMBCrawler.crawlMultiple(this, urls, new OnMultiCrawlResultListener() {
 
             @Override
-            public void onSuccess(ArrayList<LotteryResult> list) {
-                Log.d("XSMB", "Size = " + list.size());
+            public void onSuccess(ArrayList<ArrayList<LotteryResult>> pages) {
 
-                for (LotteryResult item : list) {
-                    Log.d("XSMB", item.prize + " -> " + item.numbers);
+                Log.d(TAG, "====== Crawl Success ======");
+                Log.d(TAG, "Total pages: " + pages.size());
+
+                for (int i = 0; i < pages.size(); i++) {
+
+                    ArrayList<LotteryResult> page = pages.get(i);
+
+                    Log.d(TAG, "Page " + i + " : " + page.size() + " prize rows");
+
+                    for (LotteryResult item : page) {
+
+                        Log.d(TAG,
+                                item.prize +
+                                        " -> " +
+                                        item.numbers +
+                                        " | column = " +
+                                        item.column);
+                    }
                 }
 
                 runOnUiThread(() -> {
 
-                    List<ArrayList<LotteryResult>> pages = new ArrayList<>();
-                    pages.add(list);
+                    Log.d(TAG, "Setting ViewPager Adapter...");
 
-                    XSMBPagerAdapter pagerAdapter =
+                    XSMBPagerAdapter adapter =
                             new XSMBPagerAdapter(XSMBActivity.this, pages);
 
-                    viewPager.setAdapter(pagerAdapter);
+                    viewPager.setAdapter(adapter);
 
-                    txtDate.setText("📅 Kết quả XSMB hôm nay");
+                    Log.d(TAG, "Adapter set successfully");
+
                 });
 
             }
 
             @Override
             public void onError(Exception e) {
-                e.printStackTrace();
+
+                Log.e(TAG, "====== Crawl Failed ======");
+                Log.e(TAG, "Message: " + e.getMessage(), e);
+
             }
         });
 
 
-        //////////
-//        TextView txtDate = findViewById(R.id.txtDate);
-
         String[] dates = {
                 "2026-06-28",
                 "2026-06-27",
+                "2026-06-26",
+                "2026-06-28",
+                "2026-06-27",
+                "2026-06-26",
                 "2026-06-26"
+
         };
 
         viewPager.registerOnPageChangeCallback(

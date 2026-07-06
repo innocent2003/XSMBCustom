@@ -56,7 +56,7 @@ public class LotteryAdapter extends RecyclerView.Adapter<LotteryAdapter.ViewHold
                     new GridLayout.LayoutParams();
 
             params.width = 0;
-            params.height = 140;
+            params.height = 14;
 
             params.columnSpec =
                     GridLayout.spec(GridLayout.UNDEFINED, 1f);
@@ -71,7 +71,7 @@ public class LotteryAdapter extends RecyclerView.Adapter<LotteryAdapter.ViewHold
 
             tv.setTextSize(18);
 
-            tv.setTextColor(Color.BLACK);
+//            tv.setTextColor(Color.BLACK);
 
             tv.setBackgroundResource(R.drawable.bg_cell);
 

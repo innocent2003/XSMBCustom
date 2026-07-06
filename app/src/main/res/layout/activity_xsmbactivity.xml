@@ -16,6 +16,15 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
+        <ImageView
+            android:id="@+id/btnBack"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_gravity="start|center_vertical"
+            android:layout_marginStart="16dp"
+            android:src="@drawable/keyboard_backspace_24px"
+
+            app:tint="#FFFFFF" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -41,44 +50,14 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
 
+
+
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/viewPager"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintTop_toBottomOf="@id/txtDate"
-        app:layout_constraintBottom_toTopOf="@id/radioGroup"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
-
-    <RadioGroup
-        android:id="@+id/radioGroup"
-        android:layout_width="0dp"
-        android:layout_height="56dp"
-        android:orientation="horizontal"
-        android:gravity="center"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
-
-        <RadioButton
-            android:id="@+id/rbFull"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:checked="true"
-            android:text="Đầy đủ"/>
-
-        <RadioButton
-            android:id="@+id/rb2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="2 số"/>
-
-        <RadioButton
-            android:id="@+id/rb3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="3 số"/>
-
-    </RadioGroup>
-
+        app:layout_constraintEnd_toEndOf="parent"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

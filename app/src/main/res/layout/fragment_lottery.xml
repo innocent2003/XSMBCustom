@@ -5,9 +5,44 @@
     android:layout_height="match_parent">
 
     <LinearLayout
-        android:id="@+id/layoutResult"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"/>
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/layoutResult"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"/>
+
+        <RadioGroup
+            android:id="@+id/rgView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="8dp">
+
+            <RadioButton
+                android:id="@+id/rbFull"
+                android:text="Đầy đủ"
+                android:checked="true"/>
+
+            <RadioButton
+                android:id="@+id/rb2"
+                android:text="2 số"/>
+
+            <RadioButton
+                android:id="@+id/rb3"
+                android:text="3 số"/>
+
+        </RadioGroup>
+
+        <TableLayout
+            android:id="@+id/tableHeadTail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:stretchColumns="1,2"/>
+
+    </LinearLayout>
 
 </ScrollView>
