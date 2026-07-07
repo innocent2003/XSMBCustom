@@ -9,6 +9,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.GridLayout;
 import android.widget.LinearLayout;
 import android.widget.RadioGroup;
@@ -117,57 +118,144 @@ public class LotteryFragment extends Fragment {
 
         line.setOrientation(LinearLayout.HORIZONTAL);
 
+//        TextView prize = new TextView(context);
+//
+//        prize.setText(row.prize);
+//        prize.setTextColor(Color.WHITE);
+//
+//        prize.setWidth(dp(60));
+//
+//        prize.setGravity(Gravity.CENTER);
+//
+//        prize.setBackgroundResource(R.drawable.bg_prize);
+//
+//        line.addView(prize);
+
+        FrameLayout prizeContainer = new FrameLayout(context);
+
+        LinearLayout.LayoutParams containerLp =
+                new LinearLayout.LayoutParams(
+                        dp(58),
+                        LinearLayout.LayoutParams.MATCH_PARENT);
+
+        prizeContainer.setLayoutParams(containerLp);
+
         TextView prize = new TextView(context);
 
+        FrameLayout.LayoutParams prizeLp =
+                new FrameLayout.LayoutParams(
+                        dp(42),
+                        dp(28));
+
+        prizeLp.gravity = Gravity.CENTER;
+
+        prize.setLayoutParams(prizeLp);
+
         prize.setText(row.prize);
-        prize.setTextColor(Color.WHITE);
-
-        prize.setWidth(dp(60));
-
         prize.setGravity(Gravity.CENTER);
-
+        prize.setTextColor(Color.WHITE);
         prize.setBackgroundResource(R.drawable.bg_prize);
 
-        line.addView(prize);
+        prizeContainer.addView(prize);
 
-        GridLayout grid = new GridLayout(context);
+        line.addView(prizeContainer);
 
-        grid.setColumnCount(row.column);
+// cho ô giải cao bằng toàn bộ chiều cao của hàng
+//        LinearLayout.LayoutParams prizeLp =
+//                new LinearLayout.LayoutParams(
+//                        dp(58),
+//                        LinearLayout.LayoutParams.MATCH_PARENT);
+        line.setLayoutParams(new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT));
+//        prize.setLayoutParams(prizeLp);
+//
+//        line.addView(prize);
 
-        grid.setLayoutParams(
-                new LinearLayout.LayoutParams(
-                        0,
-                        LinearLayout.LayoutParams.WRAP_CONTENT,
-                        1));
+//        GridLayout grid = new GridLayout(context);
+//
+//        grid.setColumnCount(row.column);
+//
+//        grid.setLayoutParams(
+//                new LinearLayout.LayoutParams(
+//                        0,
+//                        LinearLayout.LayoutParams.WRAP_CONTENT,
+//                        1));
+//
+//        for(String number : row.numbers){
+//
+//            TextView tv = new TextView(context);
+//
+//            tv.setText(formatNumber(number));
+//
+//            tv.setGravity(Gravity.CENTER);
+//
+//            tv.setPadding(16,16,16,16);
+//
+//            tv.setBackgroundResource(R.drawable.bg_cell);
+//
+//            GridLayout.LayoutParams lp =
+//                    new GridLayout.LayoutParams();
+//
+//            lp.width = 0;
+//
+//            lp.columnSpec =
+//                    GridLayout.spec(GridLayout.UNDEFINED,1f);
+//
+//            tv.setLayoutParams(lp);
+//
+//            grid.addView(tv);
+//
+//        }
+//
+//        line.addView(grid);
+//
+//        layoutResult.addView(line);
+        LinearLayout numberLayout = new LinearLayout(context);
+        numberLayout.setOrientation(LinearLayout.VERTICAL);
+        numberLayout.setLayoutParams(new LinearLayout.LayoutParams(
+                0,
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                1));
 
-        for(String number : row.numbers){
+        int perRow = row.column;
 
-            TextView tv = new TextView(context);
+        for (int i = 0; i < row.numbers.size(); i += perRow) {
 
-            tv.setText(formatNumber(number));
+            LinearLayout lineNumber = new LinearLayout(context);
+            lineNumber.setOrientation(LinearLayout.HORIZONTAL);
+            lineNumber.setGravity(Gravity.CENTER);
 
-            tv.setGravity(Gravity.CENTER);
+            lineNumber.setLayoutParams(new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT));
 
-            tv.setPadding(16,16,16,16);
+            for (int j = i; j < Math.min(i + perRow, row.numbers.size()); j++) {
 
-            tv.setBackgroundResource(R.drawable.bg_cell);
+                TextView tv = new TextView(context);
 
-            GridLayout.LayoutParams lp =
-                    new GridLayout.LayoutParams();
+                tv.setText(formatNumber(row.numbers.get(j)));
+                tv.setGravity(Gravity.CENTER);
+                tv.setTextSize(16);
+                tv.setBackgroundResource(R.drawable.bg_cell);
 
-            lp.width = 0;
+                LinearLayout.LayoutParams lp =
+                        new LinearLayout.LayoutParams(
+                                0,
+                                dp(46),
+                                1);
 
-            lp.columnSpec =
-                    GridLayout.spec(GridLayout.UNDEFINED,1f);
+                lp.setMargins(1,1,1,1);
 
-            tv.setLayoutParams(lp);
+                tv.setLayoutParams(lp);
 
-            grid.addView(tv);
+                lineNumber.addView(tv);
+            }
 
+            numberLayout.addView(lineNumber);
         }
 
-        line.addView(grid);
-
+        line.addView(numberLayout);
         layoutResult.addView(line);
 
     }

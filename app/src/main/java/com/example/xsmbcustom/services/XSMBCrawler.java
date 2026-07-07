@@ -1,6 +1,7 @@
 package com.example.xsmbcustom.services;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.example.xsmbcustom.model.LotteryResult;
 
@@ -29,6 +30,14 @@ public class XSMBCrawler {
 
                 Element table = doc.selectFirst(
                         "table.kqmb.colgiai.extendable");
+                Element title = doc.selectFirst(".page-title");
+                String date = "";
+
+                if (title != null) {
+                    date = title.text();
+                }
+
+                Log.d("DATE", date);
 
                 ArrayList<LotteryResult> list =
                         new ArrayList<>();
@@ -144,6 +153,14 @@ public class XSMBCrawler {
 
                     Element table = doc.selectFirst(
                             "table.kqmb.colgiai.extendable");
+                    Element title = doc.selectFirst("h1");
+                    String date = "";
+
+                    if (title != null) {
+                        date = title.text();
+                    }
+
+                    Log.d("DATE", date);
 
                     ArrayList<LotteryResult> list = new ArrayList<>();
 
