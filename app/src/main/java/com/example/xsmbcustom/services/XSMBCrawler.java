@@ -3,6 +3,7 @@ package com.example.xsmbcustom.services;
 import android.content.Context;
 import android.util.Log;
 
+import com.example.xsmbcustom.model.LotteryPage;
 import com.example.xsmbcustom.model.LotteryResult;
 
 import org.jsoup.Jsoup;
@@ -140,7 +141,8 @@ public class XSMBCrawler {
 
             try {
 
-                ArrayList<ArrayList<LotteryResult>> pages = new ArrayList<>();
+//                ArrayList<ArrayList<LotteryResult>> pages = new ArrayList<>();
+                ArrayList<LotteryPage> pages = new ArrayList<>();
 
                 int index = 0;
 
@@ -209,7 +211,11 @@ public class XSMBCrawler {
                             list
                     );
 
-                    pages.add(list);
+//                    pages.add(list);
+                    LotteryPage page = new LotteryPage(date, list);
+
+// thêm vào ViewPager
+                    pages.add(page);
                     index++;
                 }
 

@@ -19,6 +19,7 @@ import com.example.xsmbcustom.MainActivity;
 import com.example.xsmbcustom.R;
 import com.example.xsmbcustom.adapter.LotteryAdapter;
 import com.example.xsmbcustom.adapter.XSMBPagerAdapter;
+import com.example.xsmbcustom.model.LotteryPage;
 import com.example.xsmbcustom.model.LotteryResult;
 import com.example.xsmbcustom.services.OnCrawlResultListener;
 import com.example.xsmbcustom.services.OnMultiCrawlResultListener;
@@ -32,6 +33,7 @@ public class XSMBActivity  extends AppCompatActivity {
 
 
     private ViewPager2 viewPager;
+    private ArrayList<LotteryPage> pages = new ArrayList<>();
     private static final String TAG = "XSMBActivity";
 //    ImageView btnBack = findViewById(R.id.btnBack);
 
@@ -67,38 +69,25 @@ public class XSMBActivity  extends AppCompatActivity {
         XSMBCrawler.crawlMultiple(this, urls, new OnMultiCrawlResultListener() {
 
             @Override
-            public void onSuccess(ArrayList<ArrayList<LotteryResult>> pages) {
+            public void onSuccess(ArrayList<LotteryPage> result) {
 
-                Log.d(TAG, "====== Crawl Success ======");
-                Log.d(TAG, "Total pages: " + pages.size());
-
-                for (int i = 0; i < pages.size(); i++) {
-
-                    ArrayList<LotteryResult> page = pages.get(i);
-
-                    Log.d(TAG, "Page " + i + " : " + page.size() + " prize rows");
-
-                    for (LotteryResult item : page) {
-
-                        Log.d(TAG,
-                                item.prize +
-                                        " -> " +
-                                        item.numbers +
-                                        " | column = " +
-                                        item.column);
-                    }
-                }
+                pages = result;
 
                 runOnUiThread(() -> {
 
-                    Log.d(TAG, "Setting ViewPager Adapter...");
-
                     XSMBPagerAdapter adapter =
-                            new XSMBPagerAdapter(XSMBActivity.this, pages);
+                            new XSMBPagerAdapter(
+                                    XSMBActivity.this,
+                                    pages);
 
                     viewPager.setAdapter(adapter);
 
-                    Log.d(TAG, "Adapter set successfully");
+                    int last = adapter.getItemCount() - 1;
+
+                    viewPager.setCurrentItem(last, false);
+
+                    txtDate.setText(
+                             pages.get(last).date);
 
                 });
 
@@ -112,18 +101,18 @@ public class XSMBActivity  extends AppCompatActivity {
 
             }
         });
+//        txtDate.setText("📅 Kết quả XSMB ngày " + pages.get(position).date);
 
-
-        String[] dates = {
-                "2026-06-28",
-                "2026-06-27",
-                "2026-06-26",
-                "2026-06-28",
-                "2026-06-27",
-                "2026-06-26",
-                "2026-06-26"
-
-        };
+//        String[] dates = {
+//                "2026-06-28",
+//                "2026-06-27",
+//                "2026-06-26",
+//                "2026-06-28",
+//                "2026-06-27",
+//                "2026-06-26",
+//                "2026-06-26"
+//
+//        };
 
         viewPager.registerOnPageChangeCallback(
                 new ViewPager2.OnPageChangeCallback() {
@@ -131,7 +120,13 @@ public class XSMBActivity  extends AppCompatActivity {
                     @Override
                     public void onPageSelected(int position) {
 
-                        txtDate.setText("📅 Kết quả XSMB ngày " + dates[position]);
+                        if (position < pages.size()) {
+
+                            txtDate.setText(
+//
+                                             pages.get(position).date);
+
+                        }
 
                     }
 
@@ -142,41 +137,5 @@ public class XSMBActivity  extends AppCompatActivity {
 
 
 
-    private ArrayList<LotteryResult> loadDataNgay1() {
 
-        ArrayList<LotteryResult> list = new ArrayList<>();
-
-        list.add(new LotteryResult("ĐB",
-                Arrays.asList("12452"), 1));
-
-        list.add(new LotteryResult("G1",
-                Arrays.asList("17149"), 1));
-
-        list.add(new LotteryResult("G2",
-                Arrays.asList("78543", "09227"), 2));
-
-        list.add(new LotteryResult("G3",
-                Arrays.asList(
-                        "04630", "04283", "69042",
-                        "24619", "93901", "21143"), 3));
-
-        list.add(new LotteryResult("G4",
-                Arrays.asList(
-                        "6660", "5298", "1396", "4449"), 4));
-
-        list.add(new LotteryResult("G5",
-                Arrays.asList(
-                        "3504", "0054", "1193",
-                        "2284", "8711", "5407"), 3));
-
-        list.add(new LotteryResult("G6",
-                Arrays.asList(
-                        "006", "473", "114"), 3));
-
-        list.add(new LotteryResult("G7",
-                Arrays.asList(
-                        "85", "41", "55", "36"), 4));
-
-        return list;
-    }
 }

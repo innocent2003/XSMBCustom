@@ -6,21 +6,20 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
 import com.example.xsmbcustom.fragment.LotteryFragment;
+import com.example.xsmbcustom.model.LotteryPage;
 import com.example.xsmbcustom.model.LotteryResult;
 
 import java.util.ArrayList;
 import java.util.List;
-
 public class XSMBPagerAdapter extends FragmentStateAdapter {
 
-    private List<ArrayList<LotteryResult>> pages;
+    private final ArrayList<LotteryPage> pages;
 
     public XSMBPagerAdapter(
             @NonNull FragmentActivity activity,
-            List<ArrayList<LotteryResult>> pages) {
+            ArrayList<LotteryPage> pages) {
 
         super(activity);
-
         this.pages = pages;
     }
 
@@ -28,7 +27,9 @@ public class XSMBPagerAdapter extends FragmentStateAdapter {
     @Override
     public Fragment createFragment(int position) {
 
-        return new LotteryFragment(pages.get(position));
+        return new LotteryFragment(
+                pages.get(position).results
+        );
 
     }
 

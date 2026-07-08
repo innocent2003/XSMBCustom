@@ -118,18 +118,7 @@ public class LotteryFragment extends Fragment {
 
         line.setOrientation(LinearLayout.HORIZONTAL);
 
-//        TextView prize = new TextView(context);
-//
-//        prize.setText(row.prize);
-//        prize.setTextColor(Color.WHITE);
-//
-//        prize.setWidth(dp(60));
-//
-//        prize.setGravity(Gravity.CENTER);
-//
-//        prize.setBackgroundResource(R.drawable.bg_prize);
-//
-//        line.addView(prize);
+
 
         FrameLayout prizeContainer = new FrameLayout(context);
 
@@ -160,57 +149,11 @@ public class LotteryFragment extends Fragment {
 
         line.addView(prizeContainer);
 
-// cho ô giải cao bằng toàn bộ chiều cao của hàng
-//        LinearLayout.LayoutParams prizeLp =
-//                new LinearLayout.LayoutParams(
-//                        dp(58),
-//                        LinearLayout.LayoutParams.MATCH_PARENT);
+
         line.setLayoutParams(new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT));
-//        prize.setLayoutParams(prizeLp);
-//
-//        line.addView(prize);
 
-//        GridLayout grid = new GridLayout(context);
-//
-//        grid.setColumnCount(row.column);
-//
-//        grid.setLayoutParams(
-//                new LinearLayout.LayoutParams(
-//                        0,
-//                        LinearLayout.LayoutParams.WRAP_CONTENT,
-//                        1));
-//
-//        for(String number : row.numbers){
-//
-//            TextView tv = new TextView(context);
-//
-//            tv.setText(formatNumber(number));
-//
-//            tv.setGravity(Gravity.CENTER);
-//
-//            tv.setPadding(16,16,16,16);
-//
-//            tv.setBackgroundResource(R.drawable.bg_cell);
-//
-//            GridLayout.LayoutParams lp =
-//                    new GridLayout.LayoutParams();
-//
-//            lp.width = 0;
-//
-//            lp.columnSpec =
-//                    GridLayout.spec(GridLayout.UNDEFINED,1f);
-//
-//            tv.setLayoutParams(lp);
-//
-//            grid.addView(tv);
-//
-//        }
-//
-//        line.addView(grid);
-//
-//        layoutResult.addView(line);
         LinearLayout numberLayout = new LinearLayout(context);
         numberLayout.setOrientation(LinearLayout.VERTICAL);
         numberLayout.setLayoutParams(new LinearLayout.LayoutParams(
