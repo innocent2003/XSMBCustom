@@ -1,10 +1,12 @@
 package com.example.xsmbcustom.activity;
 
+import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -13,6 +15,7 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.room.Room;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.xsmbcustom.MainActivity;
@@ -21,13 +24,22 @@ import com.example.xsmbcustom.adapter.LotteryAdapter;
 import com.example.xsmbcustom.adapter.XSMBPagerAdapter;
 import com.example.xsmbcustom.model.LotteryPage;
 import com.example.xsmbcustom.model.LotteryResult;
+import com.example.xsmbcustom.services.AppDatabase;
+import com.example.xsmbcustom.services.JsonStorage;
 import com.example.xsmbcustom.services.OnCrawlResultListener;
 import com.example.xsmbcustom.services.OnMultiCrawlResultListener;
 import com.example.xsmbcustom.services.XSMBCrawler;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 public class XSMBActivity  extends AppCompatActivity {
 
@@ -51,9 +63,11 @@ public class XSMBActivity  extends AppCompatActivity {
 
         btnBack.setOnClickListener(v -> finish());
 
+
         viewPager = findViewById(R.id.viewPager);
 //        viewPager.setRotationY(180f);
         TextView txtDate = findViewById(R.id.txtDate);
+        txtDate.setOnClickListener(v -> showDatePicker(txtDate));
         ArrayList<String> urls = new ArrayList<>();
 
 //        urls.add("https://az24.vn/xsmb-sxmb-xo-so-mien-bac.html");
@@ -64,6 +78,12 @@ public class XSMBActivity  extends AppCompatActivity {
         urls.add("https://az24.vn/xsmb-thu-6.html");
         urls.add("https://az24.vn/xsmb-thu-7.html");
         urls.add("https://az24.vn/xsmb-chu-nhat.html");
+        AppDatabase db = Room.databaseBuilder(
+                getApplicationContext(),
+                AppDatabase.class,
+                "xsmb.db"
+        ).build();
+
 
 
         XSMBCrawler.crawlMultiple(this, urls, new OnMultiCrawlResultListener() {
@@ -71,7 +91,19 @@ public class XSMBActivity  extends AppCompatActivity {
             @Override
             public void onSuccess(ArrayList<LotteryPage> result) {
 
-                pages = result;
+//                pages = result;
+                pages = JsonStorage.loadAll(XSMBActivity.this);
+
+                SimpleDateFormat sdf =
+                        new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault());
+
+                Collections.sort(pages, (a, b) -> {
+                    try {
+                        return sdf.parse(a.date).compareTo(sdf.parse(b.date));
+                    } catch (Exception e) {
+                        return 0;
+                    }
+                });
 
                 runOnUiThread(() -> {
 
@@ -86,7 +118,7 @@ public class XSMBActivity  extends AppCompatActivity {
 
                     viewPager.setCurrentItem(last, false);
 
-                    txtDate.setText(
+                    txtDate.setText("Kết quả XSMB ngày "+
                              pages.get(last).date);
 
                 });
@@ -101,18 +133,7 @@ public class XSMBActivity  extends AppCompatActivity {
 
             }
         });
-//        txtDate.setText("📅 Kết quả XSMB ngày " + pages.get(position).date);
 
-//        String[] dates = {
-//                "2026-06-28",
-//                "2026-06-27",
-//                "2026-06-26",
-//                "2026-06-28",
-//                "2026-06-27",
-//                "2026-06-26",
-//                "2026-06-26"
-//
-//        };
 
         viewPager.registerOnPageChangeCallback(
                 new ViewPager2.OnPageChangeCallback() {
@@ -124,7 +145,7 @@ public class XSMBActivity  extends AppCompatActivity {
 
                             txtDate.setText(
 //
-                                             pages.get(position).date);
+                                    "Kết quả XSMB ngày "+ pages.get(position).date);
 
                         }
 
@@ -135,6 +156,61 @@ public class XSMBActivity  extends AppCompatActivity {
     }
 
 
+    private void showDatePicker(TextView txtDate) {
+
+        Calendar calendar = Calendar.getInstance();
+
+        DatePickerDialog dialog = new DatePickerDialog(
+                this,
+                android.R.style.Theme_Holo_Light_Dialog_NoActionBar,
+                (view, year, month, dayOfMonth) -> {
+
+                    String selectedDate = String.format(
+                            Locale.getDefault(),
+                            "%02d-%02d-%04d",
+                            dayOfMonth,
+                            month + 1,
+                            year
+                    );
+
+                    int index = -1;
+
+                    for (int i = 0; i < pages.size(); i++) {
+
+                        if (selectedDate.equals(pages.get(i).date)) {
+                            index = i;
+                            break;
+                        }
+                    }
+
+                    if (index != -1) {
+
+                        viewPager.setCurrentItem(index, true);
+
+                        txtDate.setText("Kết quả XSMB ngày " + selectedDate);
+
+                    } else {
+
+                        Toast.makeText(
+                                XSMBActivity.this,
+                                "Không có dữ liệu ngày " + selectedDate,
+                                Toast.LENGTH_SHORT
+                        ).show();
+                    }
+
+                },
+                calendar.get(Calendar.YEAR),
+                calendar.get(Calendar.MONTH),
+                calendar.get(Calendar.DAY_OF_MONTH)
+        );
+
+        dialog.getDatePicker().setCalendarViewShown(false);
+        dialog.getDatePicker().setSpinnersShown(true);
+
+        dialog.setTitle("Chọn ngày");
+
+        dialog.show();
+    }
 
 
 

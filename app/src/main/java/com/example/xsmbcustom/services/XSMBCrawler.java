@@ -14,6 +14,8 @@ import org.jsoup.select.Elements;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class XSMBCrawler {
 
@@ -155,11 +157,11 @@ public class XSMBCrawler {
 
                     Element table = doc.selectFirst(
                             "table.kqmb.colgiai.extendable");
-                    Element title = doc.selectFirst("h1");
+                    Element title = doc.selectFirst("h2");
                     String date = "";
 
                     if (title != null) {
-                        date = title.text();
+                        date = extractDate(title.text());
                     }
 
                     Log.d("DATE", date);
@@ -205,17 +207,27 @@ public class XSMBCrawler {
                     }
 
                     // Lưu JSON
-                    JsonStorage.save(
-                            context,
-                            "xsmb_" + index + ".json",
-                            list
-                    );
+//                    JsonStorage.save(
+//                            context,
+//                            "xsmb_" + index + ".json",
+//                            list
+//                    );
 
-//                    pages.add(list);
                     LotteryPage page = new LotteryPage(date, list);
 
-// thêm vào ViewPager
+                    JsonStorage.save(
+                            context,
+                            "xsmb_" + date + ".json",
+                            page
+                    );
+
                     pages.add(page);
+
+//                    pages.add(list);
+//                    LotteryPage page = new LotteryPage(date, list);
+//
+//// thêm vào ViewPager
+//                    pages.add(page);
                     index++;
                 }
 
@@ -228,6 +240,17 @@ public class XSMBCrawler {
             }
 
         }).start();
+    }
+    private static String extractDate(String text) {
+
+        Pattern pattern = Pattern.compile("\\d{2}-\\d{2}-\\d{4}");
+        Matcher matcher = pattern.matcher(text);
+
+        if (matcher.find()) {
+            return matcher.group();
+        }
+
+        return "";
     }
 
 }
