@@ -26,4 +26,6 @@ public interface LotteryDao {
     @Query("SELECT * FROM lottery_page WHERE date=:date")
     LotteryPageEntity getByDate(String date);
 
+    @Query("SELECT COUNT(*) FROM lottery_page WHERE date LIKE '%' || :year")
+    int countByYear(String year);
 }

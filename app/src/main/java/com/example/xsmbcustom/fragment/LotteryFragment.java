@@ -207,11 +207,14 @@ public class LotteryFragment extends Fragment {
 
         TableRow row = new TableRow(getContext());
 
-        row.addView(createHeaderText("Đầu"));
-        row.addView(createHeaderText("Đuôi"));
-        row.addView(createHeaderText("Đầu"));
-        row.addView(createHeaderText("Đuôi"));
-
+//        row.addView(createHeaderText("Đầu"));
+//        row.addView(createHeaderText("Đuôi"));
+//        row.addView(createHeaderText("Đầu"));
+//        row.addView(createHeaderText("Đuôi"));
+        row.addView(createHeaderText("Đầu",true));
+        row.addView(createHeaderText("Đuôi",false));
+        row.addView(createHeaderText("Đầu",true));
+        row.addView(createHeaderText("Đuôi",false));
         tableHeadTail.addView(row);
 
     }
@@ -230,53 +233,165 @@ public class LotteryFragment extends Fragment {
         tableHeadTail.addView(row);
 
     }
-    private TextView createCell(String text,boolean red){
+    private View createCell(String text, boolean head){
 
-        TextView tv = new TextView(getContext());
+        if(head){
 
-        tv.setText(text);
+            FrameLayout root=new FrameLayout(getContext());
 
-        tv.setGravity(Gravity.CENTER);
+            TableRow.LayoutParams lp=
+                    new TableRow.LayoutParams(
+                            dp(48),
+                            dp(48));
 
-        tv.setPadding(4,4,4,4);
+            root.setLayoutParams(lp);
 
-        if(red){
+            root.setBackgroundResource(R.drawable.bg_table_cell);
+
+            TextView tv=new TextView(getContext());
+
+            FrameLayout.LayoutParams tvLp=
+                    new FrameLayout.LayoutParams(
+                            dp(30),
+                            dp(30));
+
+            tvLp.gravity=Gravity.CENTER;
+
+            tv.setLayoutParams(tvLp);
 
             tv.setBackgroundResource(R.drawable.bg_prize);
 
             tv.setTextColor(Color.WHITE);
-            tv.setPadding(0,0,0,0);
-            tv.setIncludeFontPadding(false);
-            tv.setMinHeight(0);
-            tv.setMinimumHeight(0);
-//            tv.setTextSize(5);
 
-        }else{
+            tv.setGravity(Gravity.CENTER);
 
-            tv.setBackgroundResource(R.drawable.bg_cell);
+            tv.setText(text);
 
+            root.addView(tv);
+
+            return root;
         }
-
-        return tv;
-
-    }
-    private TextView createHeaderText(String text){
 
         TextView tv=new TextView(getContext());
 
-        tv.setText(text);
+//        TableRow.LayoutParams lp=
+//                new TableRow.LayoutParams(
+//                        0,
+//                        dp(44),
+//                        1f);
+        TableRow.LayoutParams lp =
+                new TableRow.LayoutParams(
+                        dp(120),      // chiều rộng cố định
+                        dp(44)
+                );
+
+        tv.setLayoutParams(lp);
 
         tv.setGravity(Gravity.CENTER);
 
-        tv.setTextSize(10);
+        tv.setBackgroundResource(R.drawable.bg_table_cell);
 
-        tv.setTypeface(null, Typeface.BOLD);
-
-        tv.setPadding(4,4,4,4);
+        tv.setText(text);
 
         return tv;
+    }
+//    private TextView createCell(String text, boolean red) {
+//
+//        TextView tv = new TextView(getContext());
+//
+//        TableRow.LayoutParams lp;
+//
+//        if (red) {
+//            // Cột Đầu/Đuôi (số 0-9)
+//            lp = new TableRow.LayoutParams(
+//                    dp(36),
+//                    dp(32)
+//            );
+//        }
+//        else {
+//            // Cột chứa danh sách số
+//            lp = new TableRow.LayoutParams(
+//                    0,
+//                    dp(32),
+//                    1f
+//            );
+//        }
+//
+//        lp.setMargins(1, 1, 1, 1);
+//        tv.setLayoutParams(lp);
+//
+//        tv.setText(text);
+//        tv.setGravity(Gravity.CENTER_VERTICAL | Gravity.CENTER_HORIZONTAL);
+//
+//        if (red) {
+//            tv.setBackgroundResource(R.drawable.bg_prize);
+//            tv.setTextColor(Color.WHITE);
+//        } else {
+//            tv.setBackgroundResource(R.drawable.bg_cell);
+//        }
+//
+//        return tv;
+//    }
+//    private TextView createHeaderText(String text) {
+//
+//        TextView tv = new TextView(getContext());
+//
+//        TableRow.LayoutParams lp =
+//                new TableRow.LayoutParams(
+//                        0,
+//                        dp(32),
+//                        1f
+//                );
+//
+//        tv.setLayoutParams(lp);
+//
+//        tv.setText(text);
+//        tv.setGravity(Gravity.CENTER);
+//        tv.setTypeface(null, Typeface.BOLD);
+//
+//        tv.setBackgroundResource(R.drawable.bg_cell);
+//
+//        return tv;
+//    }
+private TextView createHeaderText(String text, boolean head){
+
+    TextView tv = new TextView(getContext());
+
+    TableRow.LayoutParams lp;
+
+    if(head){
+
+        lp = new TableRow.LayoutParams(
+                dp(44),
+                dp(44)
+        );
+
+    }else{
+
+//        lp = new TableRow.LayoutParams(
+//                0,
+//                dp(44),
+//                1f
+//        );
+        lp = new TableRow.LayoutParams(
+                dp(120),
+                dp(44)
+        );
 
     }
+
+    tv.setLayoutParams(lp);
+
+    tv.setGravity(Gravity.CENTER);
+
+    tv.setTypeface(Typeface.DEFAULT_BOLD);
+
+    tv.setBackgroundResource(R.drawable.bg_table_cell);
+
+    tv.setText(text);
+
+    return tv;
+}
     private String formatNumber(String number) {
 
         if (currentMode == MODE_FULL) {

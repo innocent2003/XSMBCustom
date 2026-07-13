@@ -32,6 +32,7 @@ import com.example.xsmbcustom.services.XSMBCrawler;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -78,13 +79,83 @@ public class XSMBActivity  extends AppCompatActivity {
         urls.add("https://az24.vn/xsmb-thu-6.html");
         urls.add("https://az24.vn/xsmb-thu-7.html");
         urls.add("https://az24.vn/xsmb-chu-nhat.html");
+        boolean has2012 = false;
+
+//        for (LotteryPage page : pages) {
+//            if (page.date.endsWith("2012")) {
+//                has2012 = true;
+//                break;
+//            }
+//        }
+//        if(!has2012)Ơ
+//        Calendar calendar = Calendar.getInstance();
+//        Calendar end = (Calendar) calendar.clone();
+//
+//        calendar.add(Calendar.YEAR, -15);
+//
+//        while (!end.before(calendar)) {
+//
+//            String url = String.format(
+//                    Locale.getDefault(),
+//                    "https://az24.vn/xsmb-%d-%d-%d.html",
+//                    end.get(Calendar.DAY_OF_MONTH) -1,
+//                    end.get(Calendar.MONTH) + 1,
+//                    end.get(Calendar.YEAR)
+//            );
+//
+//            urls.add(url);
+//
+//            end.add(Calendar.DAY_OF_MONTH, -1);
+//
+//        }
+
         AppDatabase db = Room.databaseBuilder(
                 getApplicationContext(),
                 AppDatabase.class,
                 "xsmb.db"
         ).build();
 
-
+//        new Thread(() -> {
+//
+//            boolean has2012 = db.lotteryDao().countByYear("2012") > 0;
+//
+//            if (!has2012) {
+//
+//                ArrayList<String> urls = new ArrayList<>();
+//
+//                Calendar calendar = Calendar.getInstance();
+//                Calendar end = (Calendar) calendar.clone();
+//
+//                calendar.add(Calendar.YEAR, -15);
+//
+//                while (!end.before(calendar)) {
+//
+//                    urls.add(String.format(
+//                            Locale.getDefault(),
+//                            "https://az24.vn/xsmb-%d-%d-%d.html",
+//                            end.get(Calendar.DAY_OF_MONTH),
+//                            end.get(Calendar.MONTH) + 1,
+//                            end.get(Calendar.YEAR)
+//                    ));
+//
+//                    end.add(Calendar.DAY_OF_MONTH, -1);
+//                }
+//
+//                XSMBCrawler.crawlMultiple(XSMBActivity.this, urls, listener);
+//
+//            } else {
+//
+//                runOnUiThread(() ->
+//                        Toast.makeText(
+//                                XSMBActivity.this,
+//                                "Đã có dữ liệu năm 2012",
+//                                Toast.LENGTH_SHORT
+//                        ).show());
+//
+//                // Chỉ load dữ liệu từ Room/Json
+//            }
+//
+//        }).start();
 
         XSMBCrawler.crawlMultiple(this, urls, new OnMultiCrawlResultListener() {
 
@@ -131,6 +202,16 @@ public class XSMBActivity  extends AppCompatActivity {
                 Log.e(TAG, "====== Crawl Failed ======");
                 Log.e(TAG, "Message: " + e.getMessage(), e);
 
+            }
+            @Override
+            public void onProgress(int current, int total) {
+                runOnUiThread(() -> {
+                    Toast.makeText(
+                            XSMBActivity.this,
+                            current + "/" + total,
+                            Toast.LENGTH_SHORT
+                    ).show();
+                });
             }
         });
 
@@ -210,6 +291,35 @@ public class XSMBActivity  extends AppCompatActivity {
         dialog.setTitle("Chọn ngày");
 
         dialog.show();
+    }
+    private ArrayList<String> generateLast3YearsUrls() {
+
+        ArrayList<String> urls = new ArrayList<>();
+
+        Calendar end = Calendar.getInstance();
+        Calendar start = Calendar.getInstance();
+        start.add(Calendar.YEAR, -3);
+
+        Calendar current = (Calendar) end.clone();
+
+        while (!current.before(start)) {
+
+            int day = current.get(Calendar.DAY_OF_MONTH);
+            int month = current.get(Calendar.MONTH) + 1;
+            int year = current.get(Calendar.YEAR);
+
+            urls.add(String.format(
+                    Locale.getDefault(),
+                    "https://az24.vn/xsmb-%d-%d-%d.html",
+                    day,
+                    month,
+                    year
+            ));
+
+            current.add(Calendar.DAY_OF_MONTH, -1);
+        }
+
+        return urls;
     }
 
 
