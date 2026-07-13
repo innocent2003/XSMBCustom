@@ -207,10 +207,7 @@ public class LotteryFragment extends Fragment {
 
         TableRow row = new TableRow(getContext());
 
-//        row.addView(createHeaderText("Đầu"));
-//        row.addView(createHeaderText("Đuôi"));
-//        row.addView(createHeaderText("Đầu"));
-//        row.addView(createHeaderText("Đuôi"));
+;
         row.addView(createHeaderText("Đầu",true));
         row.addView(createHeaderText("Đuôi",false));
         row.addView(createHeaderText("Đầu",true));
@@ -274,11 +271,7 @@ public class LotteryFragment extends Fragment {
 
         TextView tv=new TextView(getContext());
 
-//        TableRow.LayoutParams lp=
-//                new TableRow.LayoutParams(
-//                        0,
-//                        dp(44),
-//                        1f);
+
         TableRow.LayoutParams lp =
                 new TableRow.LayoutParams(
                         dp(120),      // chiều rộng cố định
@@ -295,64 +288,7 @@ public class LotteryFragment extends Fragment {
 
         return tv;
     }
-//    private TextView createCell(String text, boolean red) {
-//
-//        TextView tv = new TextView(getContext());
-//
-//        TableRow.LayoutParams lp;
-//
-//        if (red) {
-//            // Cột Đầu/Đuôi (số 0-9)
-//            lp = new TableRow.LayoutParams(
-//                    dp(36),
-//                    dp(32)
-//            );
-//        }
-//        else {
-//            // Cột chứa danh sách số
-//            lp = new TableRow.LayoutParams(
-//                    0,
-//                    dp(32),
-//                    1f
-//            );
-//        }
-//
-//        lp.setMargins(1, 1, 1, 1);
-//        tv.setLayoutParams(lp);
-//
-//        tv.setText(text);
-//        tv.setGravity(Gravity.CENTER_VERTICAL | Gravity.CENTER_HORIZONTAL);
-//
-//        if (red) {
-//            tv.setBackgroundResource(R.drawable.bg_prize);
-//            tv.setTextColor(Color.WHITE);
-//        } else {
-//            tv.setBackgroundResource(R.drawable.bg_cell);
-//        }
-//
-//        return tv;
-//    }
-//    private TextView createHeaderText(String text) {
-//
-//        TextView tv = new TextView(getContext());
-//
-//        TableRow.LayoutParams lp =
-//                new TableRow.LayoutParams(
-//                        0,
-//                        dp(32),
-//                        1f
-//                );
-//
-//        tv.setLayoutParams(lp);
-//
-//        tv.setText(text);
-//        tv.setGravity(Gravity.CENTER);
-//        tv.setTypeface(null, Typeface.BOLD);
-//
-//        tv.setBackgroundResource(R.drawable.bg_cell);
-//
-//        return tv;
-//    }
+
 private TextView createHeaderText(String text, boolean head){
 
     TextView tv = new TextView(getContext());
@@ -368,11 +304,7 @@ private TextView createHeaderText(String text, boolean head){
 
     }else{
 
-//        lp = new TableRow.LayoutParams(
-//                0,
-//                dp(44),
-//                1f
-//        );
+
         lp = new TableRow.LayoutParams(
                 dp(120),
                 dp(44)

@@ -203,16 +203,7 @@ public class XSMBActivity  extends AppCompatActivity {
                 Log.e(TAG, "Message: " + e.getMessage(), e);
 
             }
-            @Override
-            public void onProgress(int current, int total) {
-                runOnUiThread(() -> {
-                    Toast.makeText(
-                            XSMBActivity.this,
-                            current + "/" + total,
-                            Toast.LENGTH_SHORT
-                    ).show();
-                });
-            }
+
         });
 
 

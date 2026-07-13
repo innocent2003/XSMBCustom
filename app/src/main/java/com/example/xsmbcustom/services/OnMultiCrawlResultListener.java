@@ -7,7 +7,7 @@ import java.util.ArrayList;
 
 public interface OnMultiCrawlResultListener {
     void onSuccess(ArrayList<LotteryPage> pages);
-    void onProgress(int current, int total);
+//    void onProgress(int current, int total);
 
     void onError(Exception e);
 }
